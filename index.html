@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Pranyl Basnyat — AI Engineer & Technopreneer</title>
+    <meta name="description" content="Pranyl Basnyat's Portfolio — AI Engineer, Full Stack Developer, and Technopreneer specializing in RAG systems and intelligent applications." />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Scripts & Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#0a0a1a',
+                        foreground: '#ffffff',
+                        primary: {
+                            DEFAULT: '#3b82f6',
+                            foreground: '#ffffff',
+                        },
+                        secondary: {
+                            DEFAULT: '#8b5cf6',
+                            foreground: '#ffffff',
+                        },
+                        accent: {
+                            DEFAULT: '#06b6d4',
+                            foreground: '#ffffff',
+                        },
+                        muted: {
+                            DEFAULT: 'rgba(255, 255, 255, 0.1)',
+                            foreground: '#a1a1aa',
+                        },
+                        card: {
+                            DEFAULT: 'rgba(255, 255, 255, 0.03)',
+                            foreground: '#ffffff',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['"Fira Code"', 'monospace'],
+                        outfit: ['Outfit', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --background: #0a0a1a;
+        }
+
+        body {
+            background-color: var(--background);
+            color: white;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        #cursor {
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+
+        #cursor-follower {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--primary);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.2s ease, opacity 0.3s ease;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-dark {
+            background: rgba(10, 10, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Hide scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--background);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* Text Shadow Glow */
+        .text-shadow-glow {
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Neural Sphere Container */
+        #neural-sphere-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Chatbot Styles */
+        .chatbot-window {
+            display: none;
+            transform-origin: bottom right;
+        }
+
+        /* Command Palette Styles */
+        #command-palette {
+            display: none;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="mb-8">
+            <div class="text-3xl font-bold font-mono tracking-tighter text-white">
+                <span class="text-primary">&lt;</span>Pranyl<span class="text-primary">/&gt;</span>
+            </div>
+        </div>
+        <div class="w-64 h-1 bg-white/10 rounded-full overflow-hidden">
+            <div id="loading-bar" class="h-full bg-primary w-0 transition-all duration-300"></div>
+        </div>
+        <div id="loading-text" class="mt-4 text-xs font-mono text-muted-foreground uppercase tracking-widest">Initializing Systems...</div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div id="cursor"></div>
+    <div id="cursor-follower"></div>
+
+    <!-- Scroll Progress -->
+    <div id="scroll-progress" class="fixed top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary via-secondary to-accent origin-left z-50 scale-x-0"></div>
+
+    <!-- 3D Background -->
+    <canvas id="bg-canvas" class="fixed inset-0 z-0 pointer-events-none"></canvas>
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 py-6">
+        <div class="container mx-auto px-6 flex items-center justify-between">
+            <div class="text-xl font-bold font-mono tracking-tighter">
+                <span class="text-primary">&lt;</span>Pranyl<span class="text-primary">/&gt;</span>
+            </div>
+
+            <div class="hidden md:flex items-center gap-8">
+                <ul class="flex items-center gap-6">
+                    <li><a href="#about" class="text-sm text-muted-foreground hover:text-white transition-all">About</a></li>
+                    <li><a href="#skills" class="text-sm text-muted-foreground hover:text-white transition-all">Skills</a></li>
+                    <li><a href="#projects" class="text-sm text-muted-foreground hover:text-white transition-all">Projects</a></li>
+                    <li><a href="#experience" class="text-sm text-muted-foreground hover:text-white transition-all">Experience</a></li>
+                    <li><a href="#services" class="text-sm text-muted-foreground hover:text-white transition-all">Services</a></li>
+                </ul>
+                <a href="#contact" class="bg-primary/10 hover:bg-primary/20 text-primary border border-primary/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] px-6 py-2 rounded-full transition-all">Hire Me</a>
+            </div>
+
+            <button id="mobile-menu-toggle" class="md:hidden text-muted-foreground">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-background/95 backdrop-blur-xl border-b border-white/5 overflow-hidden">
+            <div class="container mx-auto px-6 py-6 flex flex-col gap-4">
+                <a href="#about" class="text-lg text-muted-foreground hover:text-white py-2">About</a>
+                <a href="#skills" class="text-lg text-muted-foreground hover:text-white py-2">Skills</a>
+                <a href="#projects" class="text-lg text-muted-foreground hover:text-white py-2">Projects</a>
+                <a href="#experience" class="text-lg text-muted-foreground hover:text-white py-2">Experience</a>
+                <a href="#services" class="text-lg text-muted-foreground hover:text-white py-2">Services</a>
+                <a href="#contact" class="w-full mt-4 bg-primary/20 text-primary border border-primary/50 py-3 rounded-xl text-center">Hire Me</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="relative z-10">
+
+        <!-- Hero Section -->
+        <section id="hero" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+                    
+                    <div class="flex flex-col order-2 lg:order-1 reveal">
+                        <div class="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-mono text-primary backdrop-blur-sm w-fit">
+                            <span class="relative flex h-2.5 w-2.5">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+                            </span>
+                            System Online / Ready to Build
+                        </div>
+
+                        <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-4 text-white leading-[1.05] font-outfit">
+                            Pranyl <span class="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">Basnyat</span>
+                        </h1>
+
+                        <div class="h-[48px] mb-4">
+                            <p class="text-2xl md:text-3xl text-muted-foreground font-light">
+                                <span id="typewriter" class="font-mono text-secondary font-medium"></span><span class="animate-pulse text-primary">|</span>
+                            </p>
+                        </div>
+
+                        <blockquote class="relative mb-8 pl-5 border-l-2 border-primary/50">
+                            <p class="text-muted-foreground/80 italic text-base md:text-lg font-light leading-relaxed">"I don't just write code — I architect possibilities."</p>
+                        </blockquote>
+
+                        <p class="text-base md:text-lg text-muted-foreground/70 max-w-xl mb-10 leading-relaxed">
+                            Building AI-powered systems, intelligent applications, and future-ready experiences at the intersection of machine learning and full-stack architecture.
+                        </p>
+
+                        <div class="flex flex-wrap gap-3">
+                            <a href="#projects" class="bg-primary hover:bg-primary/90 text-white font-semibold px-7 py-3 shadow-[0_0_30px_rgba(59,130,246,0.5)] transition-all duration-300 rounded-full flex items-center gap-2">
+                                View Projects <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </a>
+                            <a href="#" class="border border-white/15 bg-white/5 hover:bg-white/10 backdrop-blur-sm rounded-full px-7 py-3 flex items-center gap-2 transition-all">
+                                <i data-lucide="download" class="w-4 h-4"></i> Resume
+                            </a>
+                        </div>
+
+                        <div class="flex items-center gap-5 mt-10">
+                            <span class="text-xs text-muted-foreground/50 uppercase tracking-widest font-mono">Find me</span>
+                            <div class="h-px w-8 bg-white/10"></div>
+                            <a href="https://github.com/Pranyl1basnyat" target="_blank" class="text-muted-foreground hover:text-white transition-colors">
+                                <i data-lucide="github" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center lg:justify-end order-1 lg:order-2 relative h-[400px] lg:h-[600px]">
+                        <div id="neural-sphere-container"></div>
+                        
+                        <!-- Floating badges -->
+                        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 glass rounded-full px-4 py-2 flex items-center gap-2 shadow-xl whitespace-nowrap">
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                            </span>
+                            <span class="text-xs font-mono text-green-400">Open to Work</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="container mx-auto px-6 py-24 relative">
+            <div class="max-w-6xl mx-auto">
+                <div class="flex items-center gap-4 mb-14 reveal">
+                    <div class="h-px w-12 bg-gradient-to-r from-primary to-transparent"></div>
+                    <span class="text-xs font-mono text-primary uppercase tracking-widest">About Me</span>
+                    <div class="h-px flex-1 bg-gradient-to-r from-primary/20 to-transparent"></div>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-12 items-start">
+                    <div class="flex flex-col items-center gap-6 reveal">
+                        <div class="relative group">
+                            <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 via-secondary/10 to-accent/20 blur-xl scale-110 opacity-60"></div>
+                            <div class="relative w-56 h-56 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                                <img src="https://avatars.githubusercontent.com/Pranyl1basnyat" alt="Pranyl Basnyat" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="text-xl font-bold text-white font-mono">Pranyl Basnyat</h3>
+                            <p class="text-sm text-primary font-mono mt-1">AI Engineer & Technopreneer</p>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2 space-y-8 reveal">
+                        <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-white font-outfit">
+                            Architecting the <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Intelligent Future</span>
+                        </h2>
+                        <div class="space-y-5 text-lg text-muted-foreground leading-relaxed">
+                            <p>I am a <span class="text-white font-semibold">Technopreneer</span> and Full Stack Developer heavily focused on AI Engineering. My core expertise lies in architecting intelligent systems — specifically Retrieval-Augmented Generation (RAG) pipelines and interactive chatbots that don't just respond, they <span class="text-primary italic">think</span>.</p>
+                            <p>Beyond AI, I build robust, real-time applications using <span class="text-primary font-mono text-sm px-2 py-0.5 bg-primary/10 rounded-md">Flutter</span> <span class="text-secondary font-mono text-sm px-2 py-0.5 bg-secondary/10 rounded-md">WebRTC</span> <span class="text-accent font-mono text-sm px-2 py-0.5 bg-accent/10 rounded-md">Firebase</span>.</p>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
+                            <div class="glass p-4 rounded-xl text-center">
+                                <div class="text-2xl font-bold text-primary font-mono">5+</div>
+                                <div class="text-[10px] uppercase tracking-wider text-muted-foreground">Projects</div>
+                            </div>
+                            <div class="glass p-4 rounded-xl text-center">
+                                <div class="text-2xl font-bold text-secondary font-mono">3+</div>
+                                <div class="text-[10px] uppercase tracking-wider text-muted-foreground">AI Systems</div>
+                            </div>
+                            <div class="glass p-4 rounded-xl text-center">
+                                <div class="text-2xl font-bold text-accent font-mono">2+</div>
+                                <div class="text-[10px] uppercase tracking-wider text-muted-foreground">Years Exp</div>
+                            </div>
+                            <div class="glass p-4 rounded-xl text-center">
+                                <div class="text-2xl font-bold text-primary font-mono">2+</div>
+                                <div class="text-[10px] uppercase tracking-wider text-muted-foreground">Mobile Apps</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="container mx-auto px-6 py-24">
+            <div class="max-w-6xl mx-auto">
+                <div class="flex items-center gap-4 mb-14 reveal">
+                    <div class="h-px w-12 bg-gradient-to-r from-secondary to-transparent"></div>
+                    <span class="text-xs font-mono text-secondary uppercase tracking-widest">Capabilities</span>
+                    <div class="h-px flex-1 bg-gradient-to-r from-secondary/20 to-transparent"></div>
+                </div>
+
+                <div class="mb-14 reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold font-outfit mb-4">Technical <span class="bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent">Arsenal</span></h2>
+                    <p class="text-muted-foreground">A comprehensive toolkit focused on building scalable AI systems.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="skills-grid">
+                    <!-- Skills added via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="container mx-auto px-6 py-24 relative">
+            <div class="max-w-6xl mx-auto">
+                <div class="flex items-center gap-4 mb-4 reveal">
+                    <div class="h-px w-12 bg-gradient-to-r from-primary to-transparent"></div>
+                    <span class="text-xs font-mono text-primary uppercase tracking-widest">Work</span>
+                    <div class="h-px flex-1 bg-gradient-to-r from-primary/20 to-transparent"></div>
+                </div>
+
+                <div class="flex flex-col md:flex-row justify-between items-end gap-6 mb-12 reveal">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-bold font-outfit mb-4">Deployed <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Systems</span></h2>
+                        <p class="text-muted-foreground">Selection of best work in AI and Full-Stack.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2" id="project-filters">
+                        <button class="filter-btn active px-4 py-2 rounded-full text-sm bg-primary text-white" data-filter="All">All</button>
+                        <button class="filter-btn px-4 py-2 rounded-full text-sm glass text-muted-foreground" data-filter="AI/ML">AI/ML</button>
+                        <button class="filter-btn px-4 py-2 rounded-full text-sm glass text-muted-foreground" data-filter="Web">Web</button>
+                        <button class="filter-btn px-4 py-2 rounded-full text-sm glass text-muted-foreground" data-filter="Mobile">Mobile</button>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="projects-grid">
+                    <!-- Projects added via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience/Timeline -->
+        <section id="experience" class="container mx-auto px-6 py-24">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold font-outfit mb-4">Evolution & Roadmap</h2>
+                    <p class="text-muted-foreground">The journey to building intelligent systems.</p>
+                </div>
+
+                <div class="relative border-l border-white/10 ml-4 md:ml-0" id="timeline-container">
+                    <!-- Timeline items via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="container mx-auto px-6 py-24">
+            <div class="max-w-5xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-16 items-start">
+                    <div class="reveal">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 text-green-400 text-sm font-mono mb-6 border border-green-500/20">
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                            </span>
+                            Open to Opportunities
+                        </div>
+                        <h2 class="text-4xl md:text-5xl font-bold font-outfit mb-6 leading-tight">Let's Build the Future.</h2>
+                        <p class="text-muted-foreground text-lg mb-8">Ready for groundbreaking AI projects and technical challenges.</p>
+                        <div class="flex gap-4">
+                            <a href="#" class="p-3 glass rounded-xl hover:text-primary transition-colors"><i data-lucide="github"></i></a>
+                            <a href="#" class="p-3 glass rounded-xl hover:text-secondary transition-colors"><i data-lucide="linkedin"></i></a>
+                            <a href="#" class="p-3 glass rounded-xl hover:text-accent transition-colors"><i data-lucide="twitter"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="glass p-8 rounded-3xl shadow-2xl reveal">
+                        <h3 class="text-2xl font-bold mb-6">Initialize Communication</h3>
+                        <form id="contact-form" class="space-y-4">
+                            <div>
+                                <label class="text-sm font-medium text-muted-foreground block mb-2">Name</label>
+                                <input type="text" id="contact-name" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-primary/50 transition-all" placeholder="John Doe">
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-muted-foreground block mb-2">Email</label>
+                                <input type="email" id="contact-email" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-primary/50 transition-all" placeholder="john@example.com">
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-muted-foreground block mb-2">Message</label>
+                                <textarea id="contact-message" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-primary/50 transition-all h-32" placeholder="Tell me about your project..."></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-primary py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-all">
+                                Send Message <i data-lucide="send" class="w-4 h-4"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-background/50 backdrop-blur-lg py-12">
+        <div class="container mx-auto px-6 text-center">
+            <div class="text-xl font-bold font-mono mb-4 text-white">
+                <span class="text-primary">&lt;</span>Pranyl<span class="text-primary">/&gt;</span>
+            </div>
+            <p class="text-sm text-muted-foreground">© 2026 Pranyl Basnyat. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Command Palette -->
+    <div id="command-palette-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9997] hidden flex items-start justify-center pt-[15vh]">
+        <div id="command-palette" class="w-full max-w-xl glass-dark rounded-2xl overflow-hidden shadow-2xl mx-4">
+            <div class="flex items-center gap-3 px-4 py-4 border-b border-white/8">
+                <i data-lucide="search" class="w-4 h-4 text-muted-foreground"></i>
+                <input type="text" id="cmd-input" placeholder="Search commands (or type H for Hero, A for About...)" class="flex-1 bg-transparent outline-none text-sm text-white">
+            </div>
+            <div id="cmd-results" class="max-h-[360px] overflow-y-auto py-2">
+                <!-- Commands via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot -->
+    <div id="chatbot-container">
+        <button id="chat-toggle" class="fixed bottom-6 right-6 z-[999] w-14 h-14 rounded-full bg-gradient-to-br from-primary via-secondary to-accent flex items-center justify-center shadow-2xl">
+            <i data-lucide="sparkles" class="text-white" id="chat-icon"></i>
+        </button>
+        
+        <div id="chat-window" class="fixed bottom-24 right-6 z-[998] w-[360px] h-[520px] flex flex-col glass-dark rounded-2xl shadow-2xl chatbot-window">
+            <div class="flex items-center gap-3 px-4 py-3 border-b border-white/8 bg-gradient-to-r from-primary/10 to-secondary/10 shrink-0">
+                <div class="relative w-9 h-9 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                    <i data-lucide="bot" class="w-5 h-5 text-white"></i>
+                    <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-green-400 border-2 border-background"></div>
+                </div>
+                <div class="flex-1">
+                    <div class="text-sm font-semibold text-white">Pranyl's AI Assistant</div>
+                    <div class="text-[10px] text-green-400 font-mono">Online · Powered by RAG</div>
+                </div>
+            </div>
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4">
+                <!-- Messages -->
+            </div>
+            <div class="p-4 border-t border-white/5">
+                <div class="flex gap-2">
+                    <input type="text" id="chat-input" placeholder="Ask me anything..." class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm outline-none">
+                    <button id="chat-send" class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center"><i data-lucide="send" class="w-4 h-4"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Implementation -->
+    <script>
+        // --- DATA ---
+        const SKILLS = [
+            { category: "AI & Machine Learning", icon: "brain", color: "primary", skills: ["LangChain", "RAG Systems", "OpenAI API", "Vector DBs", "Python"] },
+            { category: "Frontend Development", icon: "code-2", color: "secondary", skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "GSAP"] },
+            { category: "Mobile Development", icon: "smartphone", color: "accent", skills: ["Flutter", "Dart", "WebRTC", "Firebase"] }
+        ];
+
+        const PROJECTS = [
+            { title: "AI RAG Chatbot System", cat: "AI/ML", tech: ["Python", "LangChain", "OpenAI"], featured: true },
+            { title: "Health Service Web App", cat: "Web", tech: ["Next.js", "PostgreSQL"], featured: false },
+            { title: "Cross-Platform E-commerce", cat: "Mobile", tech: ["Flutter", "Firebase"], featured: false },
+            { title: "AI Assistant with Voice", cat: "AI/ML", tech: ["Whisper", "FastAPI"], featured: true }
+        ];
+
+        const TIMELINE = [
+            { phase: "Foundations", title: "Full Stack Web", desc: "Mastered web basics and React.", icon: "code" },
+            { phase: "Mobile", title: "Flutter Journey", desc: "Cross-platform apps with Firebase.", icon: "smartphone" },
+            { phase: "AI Shift", title: "AI Engineering", desc: "LLMs, RAG, and intelligent systems.", icon: "sparkles" }
+        ];
+
+        const KB = {
+            "skills": "Pranyl's core skills are: AI/ML (LangChain, RAG, OpenAI, Python), Full Stack (React, Next.js, Node.js, TypeScript), Mobile (Flutter, Dart), and Cloud.",
+            "ai": "Pranyl specializes in RAG systems, LLM integration, and building context-aware AI applications.",
+            "contact": "You can reach Pranyl via the contact form or on GitHub @Pranyl1basnyat.",
+            "default": "I'm Pranyl's AI assistant. Ask me about his projects, skills, or experience!"
+        };
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            initLoading();
+            initTypewriter();
+            initCursor();
+            initThree();
+            initNeuralSphere();
+            initSkills();
+            initProjects();
+            initTimeline();
+            initAnimations();
+            initChat();
+            initCommandPalette();
+            initMobileMenu();
+        });
+
+        // --- LOADING SCREEN ---
+        function initLoading() {
+            let progress = 0;
+            const bar = document.getElementById('loading-bar');
+            const interval = setInterval(() => {
+                progress += Math.random() * 20;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    gsap.to("#loading-screen", { opacity: 0, duration: 1, delay: 0.5, onComplete: () => {
+                        document.getElementById('loading-screen').style.display = 'none';
+                    }});
+                }
+                bar.style.width = progress + '%';
+            }, 100);
+        }
+
+        // --- CURSOR ---
+        function initCursor() {
+            const cursor = document.getElementById('cursor');
+            const follower = document.getElementById('cursor-follower');
+            document.addEventListener('mousemove', (e) => {
+                gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0 });
+                gsap.to(follower, { x: e.clientX - 10, y: e.clientY - 10, duration: 0.15 });
+            });
+            document.querySelectorAll('a, button, .cursor-pointer').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    gsap.to(cursor, { scale: 2.5, duration: 0.3 });
+                    gsap.to(follower, { scale: 1.5, opacity: 0, duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => {
+                    gsap.to(cursor, { scale: 1, duration: 0.3 });
+                    gsap.to(follower, { scale: 1, opacity: 1, duration: 0.3 });
+                });
+            });
+        }
+
+        // --- TYPEWRITER ---
+        function initTypewriter() {
+            const titles = ["AI Engineer", "Full Stack Developer", "Flutter Developer", "Technopreneer"];
+            let i = 0, j = 0, deleting = false;
+            const el = document.getElementById('typewriter');
+            function type() {
+                const current = titles[i];
+                if (deleting) {
+                    el.textContent = current.substring(0, j--);
+                    if (j < 0) { deleting = false; i = (i + 1) % titles.length; }
+                } else {
+                    el.textContent = current.substring(0, j++);
+                    if (j > current.length) deleting = true;
+                }
+                setTimeout(type, deleting ? 50 : 150);
+            }
+            type();
+        }
+
+        // --- THREE.JS BACKGROUND ---
+        function initThree() {
+            const canvas = document.getElementById('bg-canvas');
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 8;
+
+            const geometry = new THREE.IcosahedronGeometry(4, 1);
+            const material = new THREE.MeshBasicMaterial({ color: 0x3b82f6, wireframe: true, transparent: true, opacity: 0.05 });
+            const sphere = new THREE.Mesh(geometry, material);
+            scene.add(sphere);
+
+            function animate() {
+                requestAnimationFrame(animate);
+                sphere.rotation.x += 0.001;
+                sphere.rotation.y += 0.002;
+                renderer.render(scene, camera);
+            }
+            window.addEventListener('resize', () => {
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            animate();
+        }
+
+        // --- NEURAL SPHERE ---
+        function initNeuralSphere() {
+            const container = document.getElementById('neural-sphere-container');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+
+            const coreGeom = new THREE.SphereGeometry(1.2, 32, 32);
+            const coreMat = new THREE.MeshPhongMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.8, shininess: 100 });
+            const core = new THREE.Mesh(coreGeom, coreMat);
+            scene.add(core);
+
+            const wireGeom = new THREE.IcosahedronGeometry(2, 1);
+            const wireMat = new THREE.MeshBasicMaterial({ color: 0x8b5cf6, wireframe: true, transparent: true, opacity: 0.2 });
+            const wire = new THREE.Mesh(wireGeom, wireMat);
+            scene.add(wire);
+
+            const light = new THREE.PointLight(0xffffff, 1);
+            light.position.set(5, 5, 5);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x404040));
+
+            camera.position.z = 5;
+
+            function animate() {
+                requestAnimationFrame(animate);
+                core.rotation.y += 0.01;
+                wire.rotation.y -= 0.005;
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+
+        // --- SKILLS ---
+        function initSkills() {
+            const grid = document.getElementById('skills-grid');
+            SKILLS.forEach(cat => {
+                const card = document.createElement('div');
+                card.className = `glass p-6 rounded-2xl border-${cat.color}/40 reveal transition-all hover:-translate-y-1 cursor-pointer`;
+                card.innerHTML = `
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="p-3 bg-${cat.color}/10 text-${cat.color} rounded-xl"><i data-lucide="${cat.icon}"></i></div>
+                        <h3 class="font-bold text-white">${cat.category}</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        ${cat.skills.map(s => `<span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-muted-foreground">${s}</span>`).join('')}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // --- PROJECTS ---
+        function initProjects() {
+            const grid = document.getElementById('projects-grid');
+            PROJECTS.forEach((p, i) => {
+                const card = document.createElement('div');
+                card.className = `glass rounded-2xl overflow-hidden group reveal`;
+                card.innerHTML = `
+                    <div class="h-48 bg-gradient-to-br from-primary/20 to-secondary/10 flex items-center justify-center p-8">
+                         <i data-lucide="code" class="w-12 h-12 text-primary opacity-40"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold">${p.title}</h3>
+                            <span class="text-[10px] uppercase tracking-widest text-primary px-2 py-1 bg-primary/10 rounded-full">${p.cat}</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mt-4">
+                            ${p.tech.map(t => `<span class="text-xs font-mono text-muted-foreground">${t}</span>`).join(' · ')}
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // --- TIMELINE ---
+        function initTimeline() {
+            const container = document.getElementById('timeline-container');
+            TIMELINE.forEach(e => {
+                const item = document.createElement('div');
+                item.className = 'relative pl-8 mb-12 reveal';
+                item.innerHTML = `
+                    <div class="absolute left-[-6px] top-2 w-3 h-3 rounded-full bg-primary shadow-[0_0_10px_rgba(59,130,246,1)]"></div>
+                    <div class="glass p-6 rounded-2xl">
+                        <div class="text-xs font-mono text-primary uppercase tracking-widest mb-2">${e.phase}</div>
+                        <h3 class="text-xl font-bold mb-2">${e.title}</h3>
+                        <p class="text-sm text-muted-foreground">${e.desc}</p>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // --- CHATBOT ---
+        function initChat() {
+            const toggle = document.getElementById('chat-toggle');
+            const win = document.getElementById('chat-window');
+            const input = document.getElementById('chat-input');
+            const send = document.getElementById('chat-send');
+            const msgs = document.getElementById('chat-messages');
+
+            toggle.onclick = () => {
+                const isHidden = win.style.display === 'none' || win.style.display === '';
+                win.style.display = isHidden ? 'flex' : 'none';
+                if(isHidden) {
+                    gsap.from(win, { opacity:0, scale:0.8, duration:0.4, ease:"back.out" });
+                }
+            };
+
+            function addMsg(text, role) {
+                const div = document.createElement('div');
+                div.className = `flex ${role === 'user' ? 'justify-end' : ''}`;
+                div.innerHTML = `
+                    <div class="max-w-[80%] p-3 rounded-2xl text-sm ${role === 'assistant' ? 'bg-white/5 border border-white/10' : 'bg-primary/20 border border-primary/30'}">
+                        ${text}
+                    </div>
+                `;
+                msgs.appendChild(div);
+                msgs.scrollTop = msgs.scrollHeight;
+            }
+
+            function reply(text) {
+                const q = text.toLowerCase();
+                let r = KB.default;
+                if(q.includes('skill')) r = KB.skills;
+                else if(q.includes('ai') || q.includes('project')) r = KB.ai;
+                else if(q.includes('contact')) r = KB.contact;
+                
+                setTimeout(() => addMsg(r, 'assistant'), 600);
+            }
+
+            send.onclick = () => {
+                const text = input.value.trim();
+                if(!text) return;
+                addMsg(text, 'user');
+                input.value = '';
+                reply(text);
+            };
+
+            addMsg("Hey! I'm Pranyl's AI. Ask me about his projects or skills!", 'assistant');
+        }
+
+        // --- ANIMATIONS ---
+        function initAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+            gsap.utils.toArray('.reveal').forEach(el => {
+                gsap.to(el, {
+                    scrollTrigger: el,
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "power2.out"
+                });
+            });
+            window.onscroll = () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height);
+                document.getElementById("scroll-progress").style.transform = `scaleX(${scrolled})`;
+                
+                const nav = document.getElementById('navbar');
+                if (window.scrollY > 50) {
+                    nav.classList.add('glass', 'py-4');
+                    nav.classList.remove('py-6');
+                } else {
+                    nav.classList.remove('glass', 'py-4');
+                    nav.classList.add('py-6');
+                }
+            };
+        }
+
+        // --- COMMAND PALETTE ---
+        function initCommandPalette() {
+            const overlay = document.getElementById('command-palette-overlay');
+            const input = document.getElementById('cmd-input');
+            window.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.key === 'k') {
+                    e.preventDefault();
+                    overlay.classList.toggle('hidden');
+                    if(!overlay.classList.contains('hidden')) input.focus();
+                }
+                if (e.key === 'Escape') overlay.classList.add('hidden');
+            });
+            overlay.onclick = (e) => { if(e.target === overlay) overlay.classList.add('hidden'); };
+        }
+
+        // --- MOBILE MENU ---
+        function initMobileMenu() {
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const menu = document.getElementById('mobile-menu');
+            toggle.onclick = () => {
+                menu.classList.toggle('hidden');
+            };
+            menu.querySelectorAll('a').forEach(link => {
+                link.onclick = () => menu.classList.add('hidden');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+Act as a world-class Senior Full-Stack Developer, UI/UX Designer, Brand Strategist, and AI Product Designer.
+
+Your task is to build a modern, premium, futuristic, highly interactive personal portfolio website for deployment on Vercel.
+
+GitHub Profile:
+https://github.com/Pranyl1basnyat
+
+Analyze the GitHub repositories, technologies, coding style, projects, and developer interests from the GitHub profile and automatically generate portfolio sections based on the data.
+
+The portfolio must feel like a next-generation AI engineer portfolio from 2026 with exceptional UI/UX quality.
+
+==================================================
+CORE GOAL
+==================================================
+
+Build a portfolio that:
+- Looks premium and futuristic
+- Feels smooth and interactive
+- Has world-class animations
+- Is mobile responsive
+- Uses modern design trends
+- Includes backend functionality
+- Is optimized for Vercel deployment
+- Is SEO optimized
+- Loads extremely fast
+- Impresses recruiters, clients, startups, and investors
+
+==================================================
+TECH STACK
+==================================================
+
+Frontend:
+- Next.js 15 (App Router)
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- ShadCN UI
+- GSAP (for advanced animations)
+- Lucide Icons
+
+Backend:
+- Next.js API Routes / Server Actions
+- Firebase or Supabase backend
+- Nodemailer for contact form
+- GitHub API integration
+- AI chatbot assistant integration
+
+Deployment:
+- Vercel
+
+==================================================
+DESIGN STYLE
+==================================================
+
+Create a futuristic glassmorphism + cyber-modern UI with:
+- Smooth gradients
+- Dark mode by default
+- Floating particles
+- Animated glowing borders
+- Neon highlights
+- AI-inspired design
+- Bento grid layouts
+- Smooth scrolling
+- Animated cursor effects
+- Interactive cards
+- Dynamic hover animations
+- Scroll-triggered animations
+- 3D effects where appropriate
+- Premium typography
+- Apple + Linear + Vercel inspired aesthetics
+
+Color Palette:
+- Black / deep dark backgrounds
+- Electric blue
+- Purple neon
+- Cyan accents
+- Soft glass transparency
+
+==================================================
+WEBSITE STRUCTURE
+==================================================
+
+1. HERO SECTION
+- Full-screen animated hero
+- Dynamic introduction
+- AI Engineer branding
+- Typing animation
+- Animated background
+- CTA buttons:
+  - View Projects
+  - Download Resume
+  - Contact Me
+
+Hero text example:
+“Building AI-Powered Systems, Intelligent Applications & Future-Ready Experiences.”
+
+==================================================
+2. ABOUT SECTION
+==================================================
+
+Generate a compelling professional summary using GitHub profile analysis.
+
+Focus on:
+- AI Engineering
+- Full Stack Development
+- Flutter
+- WebRTC
+- Firebase
+- RAG Systems
+- AI Assistants
+- Innovation mindset
+- Technopreneurship
+
+Add:
+- Animated statistics
+- Experience cards
+- Skills visualization
+
+==================================================
+3. SKILLS SECTION
+==================================================
+
+Create categorized animated skill cards:
+- AI & Machine Learning
+- Frontend Development
+- Backend Development
+- Mobile App Development
+- Cloud & DevOps
+- Databases
+- Tools & Technologies
+
+Include animated progress bars and floating icons.
+
+==================================================
+4. PROJECTS SECTION
+==================================================
+
+Automatically fetch and display GitHub repositories.
+
+Each project card should include:
+- Live preview image
+- Tech stack
+- GitHub link
+- Demo link
+- Animated hover effects
+- Project description
+- Status badge
+- Featured project indicator
+
+Highlight:
+- AI Assistant Projects
+- RAG Chatbot System
+- Health Service Web App
+- Online Voting System
+- Flutter Projects
+- AI + Electronics Innovation Projects
+
+Add:
+- Filtering by category
+- Search functionality
+- Smooth transitions
+
+==================================================
+5. EXPERIENCE & ROADMAP SECTION
+==================================================
+
+Create a modern timeline showing:
+- Learning journey
+- AI engineering roadmap
+- Flutter developer roadmap
+- Future goals
+- Startup vision
+
+Add animated timeline interactions.
+
+==================================================
+6. SERVICES SECTION
+==================================================
+
+Show services offered:
+- AI Development
+- Full Stack Development
+- Flutter App Development
+- Chatbot Development
+- Automation Systems
+- UI/UX Design
+- Cloud Deployment
+
+Use premium animated cards.
+
+==================================================
+7. AI ASSISTANT SECTION
+==================================================
+
+Create an integrated AI chatbot assistant inside the portfolio.
+
+Features:
+- Floating AI assistant widget
+- Can answer questions about skills/projects
+- Voice input support
+- Smart suggestions
+- Smooth animations
+
+Backend:
+- OpenAI API or Ollama local AI support
+
+==================================================
+8. CONTACT SECTION
+==================================================
+
+Create a premium contact section with:
+- Animated contact form
+- Email integration
+- Social media links
+- GitHub integration
+- LinkedIn integration
+- Resume download
+- Interactive map
+- Availability status
+
+==================================================
+9. FOOTER
+==================================================
+
+Minimal futuristic footer with:
+- Animated logo
+- Quick links
+- Social icons
+- Copyright
+- “Built with Next.js & Vercel”
+
+==================================================
+ADVANCED FEATURES
+==================================================
+
+Implement:
+- Theme switching
+- Dark/light mode
+- Smooth page transitions
+- Loading animations
+- Scroll progress indicator
+- Command palette
+- Keyboard shortcuts
+- Interactive particle background
+- Dynamic cursor
+- Performance optimization
+- Accessibility optimization
+- SEO optimization
+- Open Graph metadata
+- Sitemap generation
+
+==================================================
+ANIMATIONS
+==================================================
+
+Use advanced animations:
+- Framer Motion
+- GSAP scroll animations
+- Text reveal animations
+- Magnetic buttons
+- Floating UI effects
+- Staggered animations
+- Motion blur transitions
+
+Animations must feel premium and smooth, not excessive.
+
+==================================================
+BACKEND FEATURES
+==================================================
+
+Build backend APIs for:
+- Contact form submission
+- Resume downloads
+- Analytics dashboard
+- GitHub repository fetching
+- AI assistant responses
+- Newsletter subscription
+
+Use secure environment variables.
+
+==================================================
+VERCEL OPTIMIZATION
+==================================================
+
+Optimize for:
+- Vercel deployment
+- Edge functions
+- Server-side rendering
+- Image optimization
+- Lazy loading
+- Lighthouse score 95+
+
+==================================================
+FILE STRUCTURE
+==================================================
+
+Generate:
+- Clean scalable architecture
+- Reusable components
+- Proper folder structure
+- Environment variable examples
+- README.md
+- Deployment guide
+
+==================================================
+OUTPUT REQUIREMENTS
+==================================================
+
+Generate:
+1. Full project structure
+2. All frontend code
+3. Backend API code
+4. Tailwind configuration
+5. Animations
+6. SEO setup
+7. Deployment instructions
+8. Environment setup
+9. README documentation
+10. Vercel deployment steps
+
+The final result must feel like:
+- A billion-dollar startup portfolio
+- A futuristic AI engineer website
+- A premium SaaS landing page
+- A world-class developer portfolio
+
+Focus heavily on:
+- UI/UX excellence
+- Smooth animations
+- Clean architecture
+- Modern aesthetics
+- Professional branding
+- Recruiter attraction
+- Startup founder vibe
+- AI engineer identity
