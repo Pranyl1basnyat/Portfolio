@@ -30,12 +30,10 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: cd Asset-Linker && pnpm install --frozen-lockfile
 
-      - name: Build Vite Project (from Asset-Linker folder)
-        run: |
-          cd Asset-Linker
-          pnpm build
+      - name: Build Vite Project
+        run: cd Asset-Linker && pnpm build
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
@@ -43,7 +41,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './Asset-Linker/dist'     # ← Pointing to the correct build folder
+          path: './Asset-Linker/dist'
 
   deploy:
     environment:
