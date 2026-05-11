@@ -47,3 +47,12 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Replit-specific artifacts (not needed for deployment)
+.agents/
+.replit
+.replitignore
+replit.md
+
+# Build artifacts (not needed, we deploy source directly)
+dist/
