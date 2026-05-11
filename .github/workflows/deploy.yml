@@ -29,6 +29,12 @@ jobs:
           node-version: 20
           cache: 'pnpm'
 
+      - name: List directory structure (Debug)
+        run: ls -la
+
+      - name: List Asset-Linker folder (Debug)
+        run: ls -la ./Asset-Linker
+
       - name: Install dependencies
         working-directory: ./Asset-Linker
         run: pnpm install --frozen-lockfile
@@ -36,6 +42,9 @@ jobs:
       - name: Build Project
         working-directory: ./Asset-Linker
         run: pnpm build
+
+      - name: Check if dist folder exists (Debug)
+        run: ls -la ./Asset-Linker/dist
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
