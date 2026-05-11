@@ -30,10 +30,12 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: cd Asset-Linker && pnpm install --frozen-lockfile
+        working-directory: ./Asset-Linker
+        run: pnpm install --frozen-lockfile
 
       - name: Build Vite Project
-        run: cd Asset-Linker && pnpm build
+        working-directory: ./Asset-Linker
+        run: pnpm build
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
