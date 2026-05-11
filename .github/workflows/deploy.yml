@@ -29,11 +29,13 @@ jobs:
           node-version: 20
           cache: 'pnpm'
 
-      - name: Install dependencies (Workspace)
+      - name: Install dependencies
+        working-directory: ./Asset-Linker
         run: pnpm install --frozen-lockfile
 
-      - name: Build Asset-Linker
-        run: pnpm build --filter Asset-Linker   # Best for workspace
+      - name: Build Project
+        working-directory: ./Asset-Linker
+        run: pnpm build
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
