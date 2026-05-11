@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
 export default defineConfig({
-  base: '/',
+  base: '/Portfolio/',
 
   plugins: [
     react(),
@@ -16,10 +16,5 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
       "@assets": path.resolve(__dirname, "attached_assets"),
     },
-  },
-
-  build: {
-    outDir: 'dist',
-    emptyOutDir: true,
   },
 })
